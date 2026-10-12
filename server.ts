@@ -21,14 +21,17 @@ dotenv.config();
 
 // Initialize the Google GenAI SDK securely on the server
 // Note: User-Agent headers are set as instructed for AI Studio build telemetry
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || '',
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+function getGenAI() {
+  if (!process.env.GEMINI_API_KEY) return null;
+  return new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      }
     }
-  }
-});
+  });
+}
 
 const app = express();
 app.use(express.json());
@@ -376,7 +379,8 @@ app.post('/api/amel-advisor', async (req, res) => {
   }
 
   // Si aucune clé Gemini n'est définie, utiliser le moteur clinique de fallback intelligent
-  if (!process.env.GEMINI_API_KEY) {
+  const ai = getGenAI();
+  if (!ai) {
     const fallbackReply = getClinicalFallbackResponse(prompt, language);
     return res.json({ reply: fallbackReply, isFallback: true });
   }
@@ -433,7 +437,8 @@ app.post('/api/articles/tts', async (req, res) => {
     return res.status(400).json({ error: 'Text is required for synthesis' });
   }
 
-  if (!process.env.GEMINI_API_KEY) {
+  const ai = getGenAI();
+  if (!ai) {
     return res.json({
       fallback: true,
       audio: null,
