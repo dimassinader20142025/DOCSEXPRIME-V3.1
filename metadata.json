@@ -1,0 +1,7 @@
+{
+  "name": "DocSexprime Tunisia v3.0",
+  "description": "Plateforme d'éducation sexuelle clinique v3.0 pour les jeunes Tunisiens et professionnels de santé, adaptée à la culture tunisienne en Français, Arabe Tunisien, et Anglais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
